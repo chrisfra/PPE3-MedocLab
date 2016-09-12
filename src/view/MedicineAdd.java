@@ -28,7 +28,7 @@ public class MedicineAdd extends JDialog implements MyView{
 	private JButton btnValider;
 	private JButton btnAnnuler;
 	private static JTextField txtNom;
-	private static JComboBox<String> cbxFormes;
+	private static JComboBox<String> cbxFormes, cbxCompositionsPrincipeActif, cbxCompositionsExicipient;
 	private static JTextField txtBrevet;
 
 	/**
@@ -56,6 +56,18 @@ public class MedicineAdd extends JDialog implements MyView{
 	}
 	
 	/**
+	 * Méthode statique permettant d'obtenir la sélection de la liste déroulante formes
+	 * @return la selection de la liste déroulante formes
+	 */
+	public static String getTxtComposition_PrincipeActif(){
+		return (String) cbxCompositionsPrincipeActif.getSelectedItem();
+	}
+	
+	public static String getTxtComposition_Exicipient(){
+		return (String) cbxCompositionsExicipient.getSelectedItem();
+	}
+	
+	/**
 	 * Méthode statique permettant d'obtenir le contenu du champ texte date brevet
 	 * @return le contenu du champ texte date brevet
 	 */
@@ -74,8 +86,9 @@ public class MedicineAdd extends JDialog implements MyView{
 	/**
 	 * Create the dialog.
 	 * @param forms les formes à intégrer dans la liste déroulante
+	 * @params compositions les compositions à intégrer dans les listes déroulante
 	 */
-	public MedicineAdd(String[] forms) {
+	public MedicineAdd(String[] forms, String[] compositions) {
 		setTitle("M\u00E9dicament - Ajouter");
 		setModal(true);
 		setBounds(100, 100, 450, 300);
@@ -102,6 +115,26 @@ public class MedicineAdd extends JDialog implements MyView{
 		cbxFormes = new JComboBox<String>(forms);
 		cbxFormes.setBounds(140, 125, 192, 20);
 		contentPanel.add(cbxFormes);
+		
+		JLabel lblComposition_PrincipeActif = new JLabel("Principe actif :");
+		lblComposition_PrincipeActif.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblComposition_PrincipeActif.setBounds(43, 160, 90, 14);
+		contentPanel.add(lblComposition_PrincipeActif);
+		for(int i = 0;i < compositions.length;i++)
+			System.out.println(compositions[i]);
+		cbxCompositionsPrincipeActif = new JComboBox<String>(compositions);
+		cbxCompositionsPrincipeActif.setBounds(140, 157, 192, 20);
+		contentPanel.add(cbxCompositionsPrincipeActif);
+		
+		JLabel lblComposition_Excipient = new JLabel("Excipient :");
+		lblComposition_Excipient.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblComposition_Excipient.setBounds(52, 190, 80, 14);
+		contentPanel.add(lblComposition_Excipient);
+		for(int i = 0;i < compositions.length;i++)
+			System.out.println(compositions[i]);
+		cbxCompositionsExicipient = new JComboBox<String>(compositions);
+		cbxCompositionsExicipient.setBounds(140, 187, 192, 20);
+		contentPanel.add(cbxCompositionsExicipient);
 		
 		JLabel lblDateBrevet = new JLabel("Date brevet :");
 		lblDateBrevet.setHorizontalAlignment(SwingConstants.RIGHT);
