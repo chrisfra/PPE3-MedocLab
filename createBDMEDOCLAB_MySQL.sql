@@ -37,6 +37,11 @@ INSERT INTO forme (nom) VALUES ('Gélule');
 INSERT INTO forme (nom) VALUES ('Solution');
 INSERT INTO forme (nom) VALUES ('Poudre');
 -- ----------------------------------------------------------------------------------------------------------------------
+INSERT INTO composition (nom) VALUES ('Héparine');
+INSERT INTO composition (nom) VALUES ('Gentamicine');
+INSERT INTO composition (nom) VALUES ('Rotigotine');
+INSERT INTO composition (nom) VALUES ('Lacosamide');
+-- ----------------------------------------------------------------------------------------------------------------------
 INSERT INTO medicament (nom,dateBrevet,dateAMM,dateRetrait,idForme) VALUES ('RETROVIR','1995-5-12','1996-11-27',NULL,2);
 INSERT INTO medicament (nom,dateBrevet,dateAMM,dateRetrait,idForme) VALUES ('ALKERAN','1997-2-16','2001-11-21',NULL,3);
 INSERT INTO medicament (nom,dateBrevet,dateAMM,dateRetrait,idForme) VALUES ('EPIVIR',NULL,'2010-4-18',NULL,3);
