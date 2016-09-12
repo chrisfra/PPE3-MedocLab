@@ -9,6 +9,12 @@ CREATE TABLE IF NOT EXISTS forme(
 	CONSTRAINT pk_forme PRIMARY KEY (identifiant)
 )ENGINE=InnoDB;
 -- ----------------------------------------------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS composition(
+    identifiant INT NOT NULL auto_increment,
+    nom VARCHAR(50) unique,
+    CONSTRAINT pk_composition PRIMARY KEY (identifiant)
+)ENGINE=InnoDB;
+-- ----------------------------------------------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS medicament(
 	identifiant INT NOT NULL auto_increment,
 	nom VARCHAR(50) unique,
@@ -16,8 +22,12 @@ CREATE TABLE IF NOT EXISTS medicament(
 	dateAMM datetime,
 	dateRetrait datetime,
 	idForme INT NOT NULL,
+    principeActif INT NULL,
+    excipient INT NULL,
 	CONSTRAINT pk_medicament PRIMARY KEY (identifiant),
-	CONSTRAINT fk_medicament_forme FOREIGN KEY (idForme) REFERENCES forme (identifiant)
+	CONSTRAINT fk_medicament_forme FOREIGN KEY (idForme) REFERENCES forme (identifiant),
+    CONSTRAINT fk_medicament_principeActif FOREIGN KEY (principeActif) REFERENCES composition (identifiant),
+    CONSTRAINT fk_medicament_excipient FOREIGN KEY (excipient) REFERENCES composition (identifiant)
 )ENGINE=InnoDB;
 -- ----------------------------------------------------------------------------------------------------------------------
 -- INSERTION DES TUPLES--------------------------------------------------------------------------------------------------
