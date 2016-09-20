@@ -41,27 +41,27 @@ public class Ctrl implements ActionListener, MouseListener{
 		for(int i=0;i<dataForm.length;i++){
 			new Form(Integer.parseInt(dataForm[i][0]),dataForm[i][1]);
 		}
+		//Création des objets Composition
+				String[][] dataComp = null;
+				try {
+					dataComp = Persistence.load("composition");
+				} catch (SQLException e) {
+					String message = "Erreur lors de l'echange avec la base de données. L'application a rencontrée l'erreur : "+e.getMessage();
+					JOptionPane.showMessageDialog(null,message,"Erreur SQL",JOptionPane.ERROR_MESSAGE);
+				}
+				for(int i=0;i<dataComp.length;i++){
+					new Composition(Integer.parseInt(dataComp[i][0]),dataComp[i][1]);
+				}
 		//Création des objets Medicine
 		String[][] dataMed = null;
 		try {
-			dataMed = Persistence.load("Medicament");
+			dataMed = Persistence.load("medicament");
 		} catch (SQLException e) {
 			String message = "Erreur lors de l'echange avec la base de données. L'application a rencontrée l'erreur : "+e.getMessage();
 			JOptionPane.showMessageDialog(null,message,"Erreur SQL",JOptionPane.ERROR_MESSAGE);
 		}
 		for(int i=0;i<dataMed.length;i++){
-			new Medicine(dataMed[i][1],Form.getFormById(Integer.parseInt(dataMed[i][5])),DatesConverter.USStringToDate(dataMed[i][2]));
-		}
-		//Création des objets Composition
-		String[][] dataComp = null;
-		try {
-			dataComp = Persistence.load("composition");
-		} catch (SQLException e) {
-			String message = "Erreur lors de l'echange avec la base de données. L'application a rencontrée l'erreur : "+e.getMessage();
-			JOptionPane.showMessageDialog(null,message,"Erreur SQL",JOptionPane.ERROR_MESSAGE);
-		}
-		for(int i=0;i<dataComp.length;i++){
-			new Composition(Integer.parseInt(dataComp[i][0]),dataComp[i][1]);
+			new Medicine(dataMed[i][1],Form.getFormById(Integer.parseInt(dataMed[i][5])),DatesConverter.USStringToDate(dataMed[i][2]),Composition.getCompositionById(Integer.parseInt(dataMed[i][6])),Composition.getCompositionById(Integer.parseInt(dataMed[i][7])));
 		}
 	}
 
@@ -106,7 +106,7 @@ public class Ctrl implements ActionListener, MouseListener{
 				break;
 			case "rechercherModifier":				
 				String[][] dataTable = this.medicinesTable();
-				String[] dataColumns = {"Nom","Forme","Brevet"};
+				String[] dataColumns = {"Nom","Forme","Brevet","Principe","Excipient"};
 				//Création de la vue de recherche d'un médicament
 				MedicineSearch frame1 = new MedicineSearch(dataTable,dataColumns);
 				//Assignation d'un observateur sur cette vue
@@ -134,7 +134,7 @@ public class Ctrl implements ActionListener, MouseListener{
 					Composition composition_PrincipeActif = Composition.getCompositionByName(nomC_PrincipeActif);
 					Composition composition_Exicipient = Composition.getCompositionByName(nomC_Exicipient);
 					//Création du nouvel objet Medicine
-					Medicine med = new Medicine(nom,forme,DatesConverter.FRStringToDate(dateB));
+					Medicine med = new Medicine(nom,forme,DatesConverter.FRStringToDate(dateB),composition_PrincipeActif,composition_Exicipient);
 					//INSERT dans la BD
 					try {
 						Persistence.insertMedicine(med.getName(),med.getItsForm().getId(),med.getPatentDate(),composition_PrincipeActif.getId(), composition_Exicipient.getId());
@@ -166,15 +166,21 @@ public class Ctrl implements ActionListener, MouseListener{
 				String dateB = MedicineChange.getTxtPatentDate();
 				//Récupération de l'objet Medicine à modifier
 				Medicine med = Medicine.getMedicineByName(nom);
+				String nomC_PrincipeActif = MedicineChange.getTxtComposition_PrincipeActif();
+				String nomC_Exicipient = MedicineChange.getTxtComposition_Exicipient();
+				Composition principeActif = Composition.getCompositionByName(nomC_PrincipeActif);
+				Composition excipient = Composition.getCompositionByName(nomC_Exicipient);
 				//Modification de celui-ci à travers les setteurs
 				med.setItsForm(forme);
 				med.setPatentDate(DatesConverter.FRStringToDate(dateB));
+				med.setPrincipeActif(principeActif);
+				med.setExcipient(excipient);
 				//UPDATE dans la BD
 				try {
-					Persistence.updateMedicine(med.getName(),med.getItsForm().getId(),med.getPatentDate());
+					Persistence.updateMedicine(med.getName(),med.getItsForm().getId(),med.getPatentDate(),principeActif.getId(),excipient.getId());
 					//Mise à jour de la jtable
 					String[][] dataTable = this.medicinesTable();
-					String[] dataColumns = {"Nom","Forme","Brevet"};
+					String[] dataColumns = {"Nom","Forme","Brevet","Principe","Excipient"};
 					MedicineSearch.setTable(dataTable, dataColumns);
 					//Modification du bouton (annuler devient fermer)
 					MedicineChange.btnAnnuler.setText("Fermer");
@@ -192,15 +198,18 @@ public class Ctrl implements ActionListener, MouseListener{
 
 	/**
 	 * Méthode permettant d'interroger le modèle afin de construire un tableau contenant tous les médicaments
-	 * @return un tableau à deux dimensions contenant tous les médicaments (nom,idForme,dateBrevet)
+	 * @return un tableau à deux dimensions contenant tous les médicaments (nom,idForme,dateBrevet,principeActif,excipient)
 	 */
 	private String[][] medicinesTable() {
 		int i=0;
-		String[][] liste=new String[Medicine.allTheMedicines.size()][3];
+		String[][] liste=new String[Medicine.allTheMedicines.size()][5];
+		
 		for(Medicine m : Medicine.allTheMedicines){
 			liste[i][0]=m.getName();
 			liste[i][1]=m.getItsForm().getName();
 			liste[i][2]=DatesConverter.dateToStringFR(m.getPatentDate());
+			liste[i][3]=m.getPrincipeActif().getName();
+			liste[i][4]=m.getExcipient().getName();
 			i++;
 		}
 		return liste;
@@ -249,12 +258,14 @@ public class Ctrl implements ActionListener, MouseListener{
 			//Récupération du médicament à partir de ces informations
 			Medicine med = Medicine.getMedicineByName(laTable.getValueAt(row,0).toString());
 			//Création d'un tableau contenant le détail du médicament
-			String[] data = new String[3];
+			String[] data = new String[5];
 			data[0]=med.getName();
 			data[1]=med.getItsForm().getName();
 			data[2]=DatesConverter.dateToStringFR(med.getPatentDate());
+			data[3]=med.getPrincipeActif().getName();
+			data[4]=med.getExcipient().getName();
 			//Création de la vue de modification du médicament sélectionné dans la jtable
-			MedicineChange frame = new MedicineChange(this.formsBox(),this.compositionsBox());
+			MedicineChange frame = new MedicineChange(this.formsBox(),data,this.compositionsBox());
 			//Assignation d'un observateur sur cette vue
 			frame.assignListener(this);
 			//Affichage de la vue

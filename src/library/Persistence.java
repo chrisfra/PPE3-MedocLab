@@ -155,14 +155,16 @@ public abstract class Persistence {
 	 * @param name le nom du médicament à modifier
 	 * @param idForm la nouvelle forme du médicament à modifier
 	 * @param patentDate la nouvelle date d'obtention du brevet du médicament à modifier
+	 * @param excipient 
+	 * @param principeActif 
 	 * @throws SQLException l'exception SQL levée
 	 */
-	public static void updateMedicine(String name, int idForm, GregorianCalendar patentDate) throws SQLException {
+	public static void updateMedicine(String name, int idForm, GregorianCalendar patentDate, int principeActif, int excipient) throws SQLException {
 		Connection cn = Persistence.connection();
 		Statement stmt;
 		try{
 			 stmt = cn.createStatement();
-			 stmt.executeUpdate("UPDATE medicament SET idForme="+idForm+" WHERE nom='"+name+"'");
+			 stmt.executeUpdate("UPDATE medicament SET idForme="+idForm+", principeActif="+principeActif+", excipient="+excipient+" WHERE nom='"+name+"'");
 			 if(patentDate!=null)
 				 stmt.executeUpdate("UPDATE medicament SET dateBrevet='"+DatesConverter.dateToStringUS(patentDate)+"' WHERE nom='"+name+"'");
 		}catch (SQLException e){

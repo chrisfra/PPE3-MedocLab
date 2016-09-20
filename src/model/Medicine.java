@@ -21,6 +21,14 @@ public class Medicine {
 	 */
 	private GregorianCalendar patentDate;
 	/**
+	 * Composition du principe actif
+	 */
+	private Composition compoPrincipal;
+	/**
+	 * Composition de l'excipient
+	 */
+	private Composition compoExcipient;
+	/**
 	 * Liste statique de tous les médicaments
 	 */
 	public static ArrayList<Medicine> allTheMedicines = new ArrayList<Medicine>();
@@ -31,11 +39,14 @@ public class Medicine {
 	 * @param itsForm forme pharmaceutique du nouveau médicament
 	 * @param patentDate date d'obtention du brevet du nouveau médicament
 	 */
-	public Medicine(String name, Form itsForm, GregorianCalendar patentDate) {
+	public Medicine(String name, Form itsForm, GregorianCalendar patentDate, Composition compoPrincipal, Composition compoExcipient) {
 		super();
 		this.name = name;
 		this.itsForm = itsForm;
 		this.patentDate = patentDate;
+		this.compoPrincipal = compoPrincipal;
+		this.compoExcipient = compoExcipient;
+		
 		allTheMedicines.add(this);
 	}
 
@@ -61,6 +72,24 @@ public class Medicine {
 	 */
 	public GregorianCalendar getPatentDate() {
 		return patentDate;
+	}
+	
+	/**
+	 * Accesseur en lecture sur le principe actif
+	 * @return le principe actif
+	 */
+	public Composition getPrincipeActif()
+	{
+		return this.compoPrincipal;
+	}
+	
+	/**
+	 * Accesseur en lecture sur l'excipient
+	 * @return l'excipient
+	 */
+	public Composition getExcipient()
+	{
+		return this.compoExcipient;
 	}
 	
 	/**
@@ -94,5 +123,19 @@ public class Medicine {
 		this.patentDate = patentDate;
 	}
 
-	
+	/**
+	 * Accesseur en écriture sur le principe actif du médicament
+	 * @param principeActif le nouveau compoosant du médicament
+	 */
+	public void setPrincipeActif(Composition principeActif) {
+		this.compoPrincipal = principeActif;
+	}
+
+	/**
+	 * Accesseur en écriture sur l'excipient du médicament
+	 * @param excipient le nouveau compoosant du médicament
+	 */
+	public void setExcipient(Composition excipient) {
+		this.compoExcipient = excipient;
+	}
 }

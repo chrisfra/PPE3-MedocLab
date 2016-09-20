@@ -51,10 +51,19 @@ public class Composition {
 		return id;
 	}
 
-	public static Composition getCompositionByName(String nomC_PrincipeActif) {
+	public static Composition getCompositionByName(String compositionName) {
 		Composition composition = null;
 		for(Composition c : Composition.allTheComposition){
-			if(c.getName().equals(nomC_PrincipeActif))
+			if(c.getName().equals(compositionName))
+				composition=c;
+		}
+		return composition;
+	}
+	
+	public static Composition getCompositionById(int compositionID) {
+		Composition composition = null;
+		for(Composition c : Composition.allTheComposition){
+			if(c.getId() == compositionID)
 				composition=c;
 		}
 		return composition;

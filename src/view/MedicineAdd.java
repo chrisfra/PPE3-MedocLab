@@ -56,8 +56,8 @@ public class MedicineAdd extends JDialog implements MyView{
 	}
 	
 	/**
-	 * Méthode statique permettant d'obtenir la sélection de la liste déroulante formes
-	 * @return la selection de la liste déroulante formes
+	 * Méthodes statique permettant d'obtenir la sélection de la liste déroulante compositions
+	 * @return la selection de la liste déroulante des compositions
 	 */
 	public static String getTxtComposition_PrincipeActif(){
 		return (String) cbxCompositionsPrincipeActif.getSelectedItem();
@@ -120,8 +120,6 @@ public class MedicineAdd extends JDialog implements MyView{
 		lblComposition_PrincipeActif.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblComposition_PrincipeActif.setBounds(43, 160, 90, 14);
 		contentPanel.add(lblComposition_PrincipeActif);
-		for(int i = 0;i < compositions.length;i++)
-			System.out.println(compositions[i]);
 		cbxCompositionsPrincipeActif = new JComboBox<String>(compositions);
 		cbxCompositionsPrincipeActif.setBounds(140, 157, 192, 20);
 		contentPanel.add(cbxCompositionsPrincipeActif);
@@ -130,8 +128,6 @@ public class MedicineAdd extends JDialog implements MyView{
 		lblComposition_Excipient.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblComposition_Excipient.setBounds(52, 190, 80, 14);
 		contentPanel.add(lblComposition_Excipient);
-		for(int i = 0;i < compositions.length;i++)
-			System.out.println(compositions[i]);
 		cbxCompositionsExicipient = new JComboBox<String>(compositions);
 		cbxCompositionsExicipient.setBounds(140, 187, 192, 20);
 		contentPanel.add(cbxCompositionsExicipient);

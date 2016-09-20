@@ -44,14 +44,14 @@ public class MedicineSearch extends JDialog implements MyView{
 	public MedicineSearch(String[][] dataTable, String[] columnsTable) {
 		setTitle("M\u00E9dicament - Rechercher");
 		setModal(true);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 700, 400);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
 			JScrollPane scrollPane = new JScrollPane();
-			scrollPane.setBounds(0, 0, 434, 228);
+			scrollPane.setBounds(0, 0, 700, 300);
 			contentPanel.add(scrollPane);
 			{
 				tableMed = new JTable();
